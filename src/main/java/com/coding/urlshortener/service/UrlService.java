@@ -11,14 +11,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UrlService {
 
     private final ConcurrentHashMap<String, UrlMapping> store = new ConcurrentHashMap<>();
-    private final String DOMAIN = "http://short.ly/";
+    private final ConcurrentHashMap<String, String> orginalUrltoCode = new ConcurrentHashMap<>();
 
     public String shortenUrl(String originalUrl) {
         validateUrl(originalUrl);
-        String code = CodeGenerator.generateCode(6);
+        if(orginalUrltoCode.containsKey(originalUrl)) {
+            return orginalUrltoCode.get(originalUrl);
+        }
+        String code;
+        do { code = CodeGenerator.generateCode(6); }
+        while (store.containsKey(code));
         UrlMapping mapping = new UrlMapping(originalUrl, code);
         store.put(code, mapping);
-        return DOMAIN + code;
+        orginalUrltoCode.put(originalUrl, code);
+        return code;
     }
 
     public String getOriginalUrl(String code) {

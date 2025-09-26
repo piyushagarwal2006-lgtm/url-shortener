@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-import lombok.extern.slf4j.Slf4j;
-
 @RestController
 @RequestMapping("/api")
 public class UrlController {
